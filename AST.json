@@ -1,0 +1,124 @@
+{
+  "type": "thy",
+  "body": [
+    {
+      "type": "DATATYPE",
+      "name": "bAA",
+      "typevariables": [],
+      "constructs": [
+        {
+          "name": "True",
+          "params": []
+        },
+        {
+          "name": "False",
+          "params": []
+        }
+      ]
+    },
+    {
+      "type": "DATATYPE",
+      "name": "bool",
+      "typevariables": [],
+      "constructs": [
+        {
+          "name": "True",
+          "params": []
+        },
+        {
+          "name": "False",
+          "params": []
+        }
+      ]
+    },
+    {
+      "type": "DATATYPE",
+      "name": "tree",
+      "typevariables": [
+        "'a"
+      ],
+      "constructs": [
+        {
+          "name": "Tip",
+          "params": []
+        },
+        {
+          "name": "Node",
+          "params": [
+            {
+              "type": "SELF",
+              "value": "self"
+            },
+            {
+              "type": "TYPEVARIABLE",
+              "value": "'a"
+            },
+            {
+              "type": "SELF",
+              "value": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "DATATYPE",
+      "name": "list",
+      "typevariables": [
+        "'a"
+      ],
+      "constructs": [
+        {
+          "name": "Nil",
+          "params": []
+        },
+        {
+          "name": "Cons",
+          "params": [
+            {
+              "type": "TYPEVARIABLE",
+              "value": "'a"
+            },
+            {
+              "type": "SELF",
+              "value": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "DATATYPE",
+      "name": "nat",
+      "typevariables": [],
+      "constructs": [
+        {
+          "name": "Zero",
+          "params": []
+        },
+        {
+          "name": "Suc",
+          "params": [
+            {
+              "type": "SELF",
+              "value": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "DATATYPE",
+      "name": "sig",
+      "typevariables": [],
+      "constructs": [
+        {
+          "name": "cc",
+          "params": []
+        }
+      ]
+    },
+    null,
+    null
+  ]
+}

@@ -1,0 +1,220 @@
+theory lab1
+  imports Main
+begin
+(* list *)
+(* addHead  *)
+fun addListHead::"'a⇒'a list⇒'a list" where
+"addListHead a []= a#[]"|
+"addListHead a xs=a#xs"
+value "addListHead 100 [1::nat,2,3]"
+
+(* addTail  *)
+fun addListTail::"'a⇒'a list⇒'a list" where
+"addListTail a [] = a#[]"|
+"addListTail a (x#xs) = x # (addListTail a xs)"
+value "addListTail 100 [1::nat,2,3]"
+
+(* addListI  *)
+fun addListI::"'a⇒nat⇒'a list⇒'a list" where
+"addListI a n [] = a#[]"|
+"addListI a 0 xs = a#xs"|
+"addListI a (Suc n) (x#xs) = x # (addListI a n xs)"
+value "addListI 100 2 [1::nat,2,3]"
+
+(* delListHead  *)
+fun delListHead::"'a list⇒'a list" where
+"delListHead  [] = []"|
+"delListHead (x#xs) = xs"
+value "delListHead [1::nat,2,3]"
+
+(* delListTail  *)
+fun delListTail::"'a list⇒'a list" where
+"delListTail  [] = []"|
+"delListTail [x] =[]"|
+"delListTail (x#xs) =x # delListTail xs"
+value "delListTail [1::nat,2,3,4,5,6,7]"
+
+(* delListI  *)
+fun delListI::"nat⇒'a list⇒'a list" where
+"delListI  n [] = []"|
+"delListI  0 (x#xs) = xs"|
+"delListI  (Suc n) (x#xs) = x # (delListI  n xs)"
+value "delListI  0 [1::nat,2,3]"
+
+(* searchList  *)
+fun searchList::"'a⇒'a list⇒bool" where
+"searchList  a  [] = False"|
+"searchList  a  (x#xs) = (if a=x then True else (searchList a xs) )"
+value "searchList  1  [1::nat,2,3]"
+
+fun replaceList::"'a⇒'a⇒'a list⇒'a list" where
+"replaceList  a b []=[]"|
+"replaceList  a b (x#xs) = (if a=x then b#xs  else  x#(replaceList a  b xs) )"
+value "replaceList  2  10 [1::nat,2,3]"
+
+fun replaceListI::"'a⇒nat⇒'a list⇒'a list" where
+"replaceListI  a n []=[]"|
+"replaceListI  a (Suc 0) (x#xs) =a#xs"|
+"replaceListI  a (Suc n) (x#xs) = x#(replaceListI a n xs)"
+value "replaceListI  10 3 [1::nat,2,3]"
+
+fun filter2::"('a⇒bool)⇒'a list⇒'a list" where
+"filter2 f []=[]"|
+"filter2 f (x#xs)=(if (f x) then (x#(filter2 f xs))
+                   else (filter2 f xs))"
+value "filter2 (λy::nat. y≤5) [1,2,4,5,6,7,8]"
+
+(*append [xs] x ⟹ [xs,x] *)
+(*useful  *)
+fun app::"'a list⇒'a ⇒'a list" where
+"app [] x=[x]"|
+"app xs y= xs@y#[]"
+value "app [1::nat,2,3,4] 10 "
+value "app [] (10::nat) "
+
+fun revList::"'a list⇒'a list" where
+"revList [x]=[x]"|
+"revList (x#xs)=app (revList xs) x"
+value "revList [1::nat,2,3,4]"
+
+
+
+fun insert::"'a::ord⇒'a list⇒'a list" where
+"insert a []=[a]"|
+"insert a (x#xs)=(if a≤x then a#x#xs
+                 else x#(insert a xs))"
+value "insert 5 [1::nat,2,4,7,9]"
+
+fun insertSort::"('a::ord) list⇒'a list⇒'a list "where
+"insertSort [] ys =ys"|
+"insertSort (x#xs) ys =insertSort xs (insert x ys)"
+value "insertSort [3,5,8,6] [1::nat,2,4,7,9]"
+
+fun merge::"'a::ord list⇒'a list⇒'a list" where
+"merge xs []=xs"|
+"merge [] ys=ys"|
+"merge (x#xs) (y#ys)=(if x≤y then (x#merge xs (y#ys))
+                     else y#merge (x#xs) ys)"
+
+
+fun mergeListSort::"('a::ord) list⇒'a list" where
+"mergeListSort []=[]"|
+"mergeListSort [x]=[x]"|
+"mergeListSort xs=merge (mergeListSort (take ((size xs) div 2) xs)) (mergeListSort (drop ((size xs) div 2) xs))"
+value "mergeListSort [1::nat,10,6,17,9]"
+
+fun quickSort::"('a::ord) list⇒'a list" where
+"quickSort []=[]"|
+"quickSort (x#xs)=
+(quickSort(filter (λy. y≤x) xs))@x#(quickSort(filter (λy. y>x) xs))"
+value "quickSort [1::nat,10,6,17,9]"
+
+
+
+(*fun rightest::"'a tree ⇒ 'a" where
+"rigthest (Node l x r) = (if r=Tip then x else rigthest r)"*)
+
+
+
+(*tree*)
+datatype 'a tree=Tip|Node  "'a tree" 'a "'a tree"
+
+(*search*)
+fun preSearchTree::"'a ⇒ 'a tree ⇒ bool" where
+"preSearchTree a Tip = False"|
+"preSearchTree a (Node left x right)= (if a = x then True
+                                     else if (preSearchTree a left) then True
+                                     else (preSearchTree a right))"
+fun midSearchTree::"'a ⇒ 'a tree ⇒ bool" where
+"midSearchTree a Tip = False"|
+"midSearchTree a (Node left x right)= (if (midSearchTree a left) then True
+                                     else if a=x  then True
+                                     else (midSearchTree a right))"
+fun postSearchTree::"'a ⇒ 'a tree ⇒ bool" where
+"postSearchTree a Tip = False"|
+"postSearchTree a (Node left x right)= (if (postSearchTree a left) then True
+                                     else if (postSearchTree a right) then True
+                                     else if a=x then True
+                                     else False)"
+value "postSearchTree (2::nat) ( Node (Node Tip 1 Tip) 3 (Node Tip 2 Tip))"
+
+(*insert *)
+fun insTree::"'a::ord ⇒ 'a tree ⇒ 'a tree" where
+"insTree a Tip = Node Tip a Tip"|
+"insTree a (Node l x r) = (if a≤x then Node (insTree a l) x r
+else Node l x (insTree a r))"
+value "insTree (1::nat) (Node Tip 2 Tip)"
+value "insTree (9::nat) (Node (Node Tip 2 Tip) 4 (Node Tip 8 Tip))"
+
+(* traverse *)
+fun preTraverseTree::"'a tree ⇒ 'a list" where
+"preTraverseTree Tip = []"|
+"preTraverseTree (Node l x r) = x#(preTraverseTree l)@(preTraverseTree r)"
+value "preTraverseTree  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+fun midTraverseTree::"'a tree ⇒ 'a list" where
+"midTraverseTree Tip = []"|
+"midTraverseTree (Node l x r) = (midTraverseTree l)@x#(midTraverseTree r)"
+value "midTraverseTree  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+fun postTraverseTree::"'a tree ⇒ 'a list" where
+"postTraverseTree Tip = []"|
+"postTraverseTree (Node l x r) = app ((postTraverseTree l)@(postTraverseTree r)) x"
+value "postTraverseTree  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+(*delete*)
+(*rightest*)
+fun rightest::"'a tree ⇒ 'a" where
+"rightest (Node l x r) = (if r = Tip then x else rightest r)"
+
+(*rightestLeft*)
+fun rightestLeft::"'a tree ⇒ 'a tree" where
+"rightestLeft Tip = Tip"|
+(*l x r if r then l ! ! ! *)
+"rightestLeft (Node l x r) = (if r = Tip then l
+                                     else (Node l x (rightestLeft r)))"
+value "rightestLeft  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+fun deleteRoot::"'a tree ⇒ 'a tree" where
+"deleteRoot Tip = Tip"|
+"deleteRoot (Node left x right) = (if right = Tip then left
+                                   else if left = Tip then right
+                                   else (Node (rightestLeft left) (rightest left) right))"
+value "deleteRoot  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+fun deleteTree::"'a::ord ⇒ 'a tree ⇒ 'a tree" where
+"deleteTree a Tip = Tip"|
+"deleteTree a (Node left x right) = (if a = x then (deleteRoot (Node left x right))
+                                     else if a < x then (Node (deleteTree a left) x right)
+                                     else (Node left x (deleteTree a right)))"
+value "deleteTree 1  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+(* sort rep *)
+fun replaceTree::"'a::ord ⇒ 'a::ord ⇒ 'a tree ⇒ 'a tree" where
+"replaceTree a b Tip = Tip"|
+"replaceTree a b (Node l x r) = (if midSearchTree a (Node l x r) = True
+                                       then (insTree b (deleteTree a (Node l x r)))
+                                       else (Node l x r))"
+value "replaceTree 2 0  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+(* nosort rep *)
+fun replaceTree2::"'a::ord ⇒ 'a::ord ⇒ 'a tree ⇒ 'a tree" where
+"replaceTree2 a b Tip = Tip"|
+"replaceTree2 a b (Node l x r) =
+(if a=x then Node l b r
+  else if a<x  then Node (replaceTree2 a b l )  x r
+  else Node l x (replaceTree2 a b r)
+)"
+value "replaceTree2 1 10  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+(*traverse to list then sort*)
+fun listSortTree::"'a::ord tree ⇒ 'a list" where
+"listSortTree a = quickSort  (preTraverseTree a)"
+value "listSortTree  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+(* sortTree then midTraverse*)
+fun midTraverseSortTree::"'a tree ⇒ 'a list" where
+"midTraverseSortTree a = midTraverseTree a"
+value "midTraverseSortTree  (Node (Node Tip 1 Tip) (2::nat) (Node Tip 3 Tip))"
+
+
+end
